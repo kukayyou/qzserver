@@ -1,0 +1,40 @@
+#!/bin/sh
+#make root file system for debian pakcage
+#EnvirmentVar: DEB_ROOTFS, DEB_CTRLDIR
+
+mkdir -p -m 755 "${DEB_ROOTFS}" || exit 1
+mkdir -p -m 755 "${DEB_ROOTFS}"/${UC_ROOT}/sbin || exit 2
+install -m 755 "qzserver" "${DEB_ROOTFS}"/${UC_ROOT}/sbin || exit 3
+mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/etc" || exit 4
+mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/etc/init.d" || exit 5
+mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/share" || exit 7
+install -m 644 "conf/qzserver.conf" "${DEB_ROOTFS}/${UC_ROOT}/etc" || exit 8
+#install -m 644 "conf/qzserver.conf.template" "${DEB_ROOTFS}/${UC_ROOT}/etc" || exit 8
+#install -m 644 "conf/timezones_offset" "${DEB_ROOTFS}/${UC_ROOT}/etc" || exit 8
+#拷贝云会议openapi证书
+#install -m 644 "conf/client_cert_006317.pem" "${DEB_ROOTFS}/${UC_ROOT}/etc" || exit 8
+#install -m 644 "conf/client_key_006317_nopass.pem" "${DEB_ROOTFS}/${UC_ROOT}/etc" || exit 8
+
+install -m 744 "qzserver.sh" "${DEB_ROOTFS}/${UC_ROOT}/etc/init.d" || exit 9
+#cp unstemplate/*.tpl ${DEB_ROOTFS}/${UC_ROOT}/etc/template || exit 10
+
+#mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/etc/static/download" || exit 10
+#mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/etc/static/upload" || exit 10
+#cp -r static/download/* "${DEB_ROOTFS}/${UC_ROOT}/etc/static/download" || exit 11
+
+
+#拷贝时区文件
+#mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/etc/zoneinfo" || exit 10
+#mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/etc/zoneinfo-outlook" || exit 10
+#cp -r conf/zoneinfo/* "${DEB_ROOTFS}/${UC_ROOT}/etc/zoneinfo" || exit 11
+
+#安装工具集
+#mkdir -p -m 755 "${DEB_ROOTFS}/${UC_ROOT}/tools" || exit 12
+#install -m 755 "conferencestat" "${DEB_ROOTFS}"/${UC_ROOT}/tools || exit 12
+
+chown -R root:root "${DEB_ROOTFS}/${UC_ROOT}" || exit 11
+
+# docker
+mkdir -p ${DEB_ROOTFS}/${UC_ROOT}/docker/qzserver || exit 25
+install -m 755 "DOCKER/Dockerfile" "${DEB_ROOTFS}/${UC_ROOT}/docker/qzserver" || exit 26
+install -m 755 "DOCKER/docker_start.sh" "${DEB_ROOTFS}/${UC_ROOT}/docker/qzserver" || exit 27
